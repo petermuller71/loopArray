@@ -1,0 +1,105 @@
+<?php
+
+/*******************************************************************************************************************************
+ * 
+ * PHP Loop through (infinite) multidemensional array or json
+ * 
+ * Instruction:
+ * $result = loopArray::forEach($php_multi_array);
+ * print $result;
+ * 
+ * if data is json format, first do:
+ * $php_multi_array = json_decode($data, true);
+ * 
+ ******************************************************************************************************************************/ 
+
+class loopArray {
+
+    /**
+     * PHP Loop through (infinite) multidemensional array or json
+     * (if json, use $php_multi_array = json_decode($data, true) to create array)
+     *
+     * public gist:
+     * https://gist.github.com/petermuller71/33616d55174d9725fc00a663d30194ba
+     *
+     * @param      string       $arr              multidemensional array 
+     *
+     * @property   string       $indent           used to format array (indent), for visualization (skip when not needed)
+     *
+     * @return     string       $result           array (visually) formatted
+     *
+     * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
+     * @copyright  2018 Peter Muller. All rights reserved.
+     * @author     Peter Muller <petermuller71@gmail.com>
+     * @version    1.01
+     *
+     */
+    
+    
+    static private $indent = "";
+    static private $result = "";
+
+    /*
+     * forEach
+     * Loop through array
+     *
+     * @param   array     $arr         Array
+     * @param   int       $i           Level
+     * @return  string    $result
+     *
+     */
+    
+    public static function forEach($arr, $i = 0) 
+    {
+        
+        if ($i == 1) { self::$result .= "<br />"; } 
+        foreach($arr as $key => $value)
+        {
+                    
+            if (!is_array($value))
+            {                
+                self::indent($i);
+                
+                self::$result .= self::$indent.$key ." => ". $value ."<br />" ;
+            }
+            else 
+            {
+                self::indent($i);
+                
+                $i++;
+                self::$result .= self::$indent.$key." => <br />";
+
+                self::forEach($value, $i);   
+                $i--;
+            }
+        }
+        
+        return self::$result;
+    }
+    
+    
+    
+    /*
+     * indent
+     * used to format array (indent), for visualization (skip when not needed)
+     *
+     * @param   int       $i           Level (for indent)
+     *
+     */
+    
+    public static function indent($i) 
+    {
+        self::$indent = "";
+
+        if ($i >= 1) 
+        {
+            for ($in = 1; $in <= $i; $in++) 
+            {
+                self::$indent .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            }
+        }       
+    }
+    
+}
+
+?>
